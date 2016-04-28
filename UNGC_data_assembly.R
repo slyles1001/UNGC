@@ -4,7 +4,7 @@ library(igraph)
 library(stringr)
 setwd("~/UNGC/R scripts/UNGC")
 
-UNGC <- read.delim("~/Dropbox/Spring2016/Global Partnerships/Final Paper/Original Datasets/UNGC.txt", header=FALSE, comment.char="#")
+UNGC <- read.delim("~UNGC/R scripts/data.txt", header=FALSE, comment.char="#")
 View(UNGC)
 # Create Type/Country/Year/Sector/Area
 type = UNGC[,2]
