@@ -4,29 +4,16 @@ library(igraph)
 library(stringr)
 setwd("~/UNGC")
 
+#### Data initialization ####
 UNGC <- read.delim("~/UNGC/UNGC.txt", header=FALSE, comment.char="#")
 #View(UNGC)
+
 # isolate Name of unit, type of unit, sector of unit, country of origin 
 name = UNGC[,1]
 type = UNGC[,2]
 sector = UNGC[,3]
 country = UNGC[,4]
 year = UNGC[,5]
-
-
-
-# Number of types overall
-# sum(str_count(type, "Academic"))
-# sum(str_count(type, "Business Association Global"))
-# sum(str_count(type, "Business Association Local"))
-# sum(str_count(type, "City"))
-# sum(str_count(type, "Company"))
-# sum(str_count(type, "Foundation"))
-# sum(str_count(type, "Micro Enterprise"))
-# sum(str_count(type, "NGO Global"))
-# sum(str_count(type, "NGO Local"))
-# sum(str_count(type, "Public Sector Organization"))
-# sum(str_count(type, "Small or Medium-sized Enterprise"))
 
 # number of active entries in UNGC as of 26/04/2016
 entry_count <- length(name)
@@ -84,10 +71,15 @@ for (i in 1:sector_count){
 stopifnot(vcount(all_sectors) == sector_count)
 summary(all_sectors)
 
+#### Adding Edges ####
 
+country_to_sector <- make_empty_graph()
 
-
-
+for(i in 1:entry_count){
+  
+  
+  
+}
 
 
 
