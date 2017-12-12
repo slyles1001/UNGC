@@ -20,17 +20,38 @@ st = "SELECT count(name) from active where sector like 'Chem%';"
 x = ungc_db.query(st)
 
 def read_gps(fname):
-    x = []
+    x = {}
     with open(fname) as f:
-        s = f.readline().split('\t')
-        x.append(s[1:])
+        for line in f:
+          s = line.split('\t')
+          #print(s[3][:-1])
+          # the \n char only counts as 1 letter, hence -1
+          x[s[3]] = (s[1], s[2])
     f.closed
     return(x)
+
+#st = "SELECT name, date from active where sector like 'Chem%' limit 20;"
     
-st = "SELECT name, date from active where sector like 'Chem%' limit 20;"
-#ungc_db.query(st)
-#print(ungc_db)
+def cleaned(country):
+  '''takes a crappy padded string and returns the
+  not padded version'''
+  i = 0
+  while country[i] + country[i+1] != '  ':
+    i += 1
+  return(country[:i]+'\n')
 
+def writecountries():
+  sel = "select distinct(country) from active"
+  sel = ungc_db.query(sel)
+  with open('newcountries.txt', 'w') as nc:
+    for country in sel:
+      c2 = cleaned(country[0])
+      nc.write(c2)
+    nc.closed
+  
+a = read_gps("./gps.txt")
+with open('newcountries.txt') as nc:
+  for line in nc:
+    print(a[line])
 
-#a = read_gps("./gps.txt")
 #print(a[0])
