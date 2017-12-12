@@ -54,18 +54,29 @@ def test_gps_countries():
       print(a[line])
 
 def haversine(a, b):
-  x = [float(a[0]), float([a[1]])
-  y = [float(b[0]), float([b[1]])
+  x = [float(a[0]), float(a[1])]
+  y = [float(b[0]), float(b[1])]
   R = 6371 # km
-  x = np.radians(x);
-  y = np.radians(y);
-  # shouldn't want both of these, right?
-  dlat = np.radians(y[0] - x[0]);
-  dlon = np.radians(y[1] - y[2]);
+  x = np.radians(x)
+  y = np.radians(y)
 
-  var a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
-          Math.cos(φ1) * Math.cos(φ2) *
-          Math.sin(Δλ/2) * Math.sin(Δλ/2);
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-  
-  var d = R * c;
+  dlat = y[0] - x[0]
+  dlon = y[1] - x[1]
+  dsig = 2*np.arcsin(
+          np.sqrt(
+            np.sin(dlat/2)**2 +
+            np.cos(x[0]) * np.cos(y[0]) * np.sin(dlon/2)**2
+          )
+        )
+  d = R * dsig
+  return(d)
+
+def test_hav():
+  a = read_gps("./gps.txt")
+  x = sorted(a.keys())[0]
+  y = sorted(a.keys())[1]
+  print(x,y)
+  d = haversine(a[x], a[y])
+  print(d)
+
+test_hav()
