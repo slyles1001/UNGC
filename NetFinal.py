@@ -1,23 +1,23 @@
 #import matplotlib.pyplot as plt
 import dbase as db
 #import pandas as pd
-#import numpy as np
+import numpy as np
 
-
-connect_str = "dbname='testpython' user='ducttapecreator' host='localhost' " #+ \
-			 # "password='OLIVIA'"
-
-#other = "SELECT count(name) from UNGC where country~*'united states' and date_due>='%s' and date_due<'%s';" % (yr, yr+10000)
-
-ungc_db = db.db(connect_str)
-st = "SELECT count(name) from active where sector like 'Pharma%';"
-v = ungc_db.query(st)
-print(v)
-st = "SELECT count(name) from active where sector like 'Fore%';"
-w = ungc_db.query(st)
-print(w)
-st = "SELECT count(name) from active where sector like 'Chem%';"
-x = ungc_db.query(st)
+def test_connection():
+  connect_str = "dbname='testpython' user='ducttapecreator' host='localhost' " #+ \
+  			 # "password='OLIVIA'"
+  
+  #other = "SELECT count(name) from UNGC where country~*'united states' and date_due>='%s' and date_due<'%s';" % (yr, yr+10000)
+  
+  ungc_db = db.db(connect_str)
+  st = "SELECT count(name) from active where sector like 'Pharma%';"
+  v = ungc_db.query(st)
+  print(v)
+  st = "SELECT count(name) from active where sector like 'Fore%';"
+  w = ungc_db.query(st)
+  print(w)
+  st = "SELECT count(name) from active where sector like 'Chem%';"
+  x = ungc_db.query(st)
 
 def read_gps(fname):
     x = {}
@@ -30,8 +30,6 @@ def read_gps(fname):
     f.closed
     return(x)
 
-#st = "SELECT name, date from active where sector like 'Chem%' limit 20;"
-    
 def cleaned(country):
   '''takes a crappy padded string and returns the
   not padded version'''
@@ -49,9 +47,25 @@ def writecountries():
       nc.write(c2)
     nc.closed
   
-a = read_gps("./gps.txt")
-with open('newcountries.txt') as nc:
-  for line in nc:
-    print(a[line])
+def test_gps_countries():
+  a = read_gps("./gps.txt")
+  with open('newcountries.txt') as nc:
+    for line in nc:
+      print(a[line])
 
-#print(a[0])
+def haversine(a, b):
+  x = [float(a[0]), float([a[1]])
+  y = [float(b[0]), float([b[1]])
+  R = 6371 # km
+  x = np.radians(x);
+  y = np.radians(y);
+  # shouldn't want both of these, right?
+  dlat = np.radians(y[0] - x[0]);
+  dlon = np.radians(y[1] - y[2]);
+
+  var a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+          Math.cos(φ1) * Math.cos(φ2) *
+          Math.sin(Δλ/2) * Math.sin(Δλ/2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  
+  var d = R * c;
