@@ -2,12 +2,25 @@
 
 library(igraph)
 library(stringr)
-setwd("~/UNGC")
+setwd("~/Dropbox/Spring2016/Global Partnerships/Final Paper/Code Sets")
 
 #### Data initialization ####
+
+UNGC <- read.graph('./test_sector_graph.GraphML', format='GraphML')
+summary(UNGC)
+E(UNGC)$"Support Services"
+support_services = delete.edges(UNGC, which(!is.finite(E(UNGC)$'Support Services')))
+support_services = delete_vertices(support_services, which(igraph::degree(support_services) < 1))
+plot(support_services,
+     vertex.size = 5,
+     edge.label = E(support_services)$'Support Services')
+V(UNGC)$name
+
+
 UNGC <- read.delim("~/UNGC/UNGC.txt", header=FALSE, comment.char="#")
 #View(UNGC)
 
+UNGC = as.undirected(UNGC)
 # isolate Name of unit, type of unit, sector of unit, country of origin 
 name = UNGC[,1]
 type = UNGC[,2]
@@ -75,11 +88,7 @@ summary(all_sectors)
 
 country_to_sector <- make_empty_graph()
 
-for(i in 1:entry_count){
-  
-  
-  
-}
+
 
 
 

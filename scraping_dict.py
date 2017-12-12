@@ -5,65 +5,7 @@ from bs4 import BeautifulSoup
 import urllib3, certifi, psycopg2, string
 from dateutil.parser import parse
 from timeit import default_timer as timer
-
-
-class db:
-	'''Class containing the database connection
-	Makes use of psycopg2 cleaner and easier
-	No need for global connection to DB'''
-	def __init__(self):
-		'''Make new db object, consolidating psycopg2.connect and psycopg2.connect.cursor into one thing'''
-		# Use the try if we might not connect to the db
-		try:
-			# db login info
-			# may want to pass this into init later, if we have multiple dbs
-			connect_str = "dbname='ungc_test' user='ducttapecreator' host='localhost'"
-
-			# use our connection values to establish a connection
-			self.conn = psycopg2.connect(connect_str)
-			self.cursor = self.conn.cursor()
-			# create a psycopg2 cursor that can execute queries
-			#return(conn)
-		except Exception as e:
-			print("Can't connect. Invalid dbname, user or password?")
-			print(e)
-
-	def is_closed(self):
-		if self.cursor.closed:
-			print("Please create a new db object.")
-			return(True)
-		else:
-			return(False)
-
-	
-	def commit(self):
-		#breififying
-		if not self.is_closed():
-			self.conn.commit()
-	
-	def execute(self, exec_string):
-		#breififying
-		if not self.is_closed():
-			self.cursor.execute(exec_string)
-
-	def query(self, exec_string):
-		'''distinguish from execute by returning a list instead of the weird buffer thing'''		
-		if not self.is_closed():
-			self.execute(exec_string)
-			self.query_results = self.cursor.fetchall()
-		
-
-	def close(self):
-		# May not be the best way to do this, but is_closed() should protect from error.
-		if not self.is_closed():
-			self.cursor.close()
-			self.conn.close()
-	
-	def __str__(self):
-		try:
-			return str(self.query_results)
-		except AttributeError:
-			print('Please query the DB first')
+import dbase as db
 
 
 def fix(stri, fu = 0):
@@ -228,6 +170,7 @@ def add_worldbank_table():
 
 	database.commit()
 	database.close()
+	return(0)
 	
 #add_worldbank_table()
 def add_CPI_table():
@@ -349,14 +292,13 @@ def count_by_years_table():
 
 	print(end - start)
 
-
-count_by_years_table()
+#count_by_years_table()
 	
 #add_CPI_table()
 #def get_category_links(section_url):
 
 
-ungc_db = db()
+ungc_db = db.db()
 st = "SELECT count(name), count(distinct sector), count(distinct org_type) from UNGC where date_joined < '%s' and date_due >= '%s' and country='%s' limit 20;" % (20100101, 20110101, 'brazil')
 ungc_db.query(st)
 
