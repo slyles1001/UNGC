@@ -7,23 +7,18 @@ import dbase as db
 connect_str = "dbname='testpython' user='ducttapecreator' host='localhost' " #+ \
 			 # "password='OLIVIA'"
 
-# use our connection values to establish a connection
-#conn = psycopg2.connect(connect_str)
-# create a psycopg2 cursor that can execute queries
-#cursor = conn.cursor()
-
 #other = "SELECT count(name) from UNGC where country~*'united states' and date_due>='%s' and date_due<'%s';" % (yr, yr+10000)
 
 ungc_db = db.db(connect_str)
 st = "SELECT count(name) from active where sector like 'Pharma%';"
-ungc_db.query(st)
-print(ungc_db)
+v = ungc_db.query(st)
+print(v)
 st = "SELECT count(name) from active where sector like 'Fore%';"
-ungc_db.query(st)
-print(ungc_db)
+w = ungc_db.query(st)
+print(w)
 st = "SELECT count(name) from active where sector like 'Chem%';"
-ungc_db.query(st)
-print(ungc_db)
+x = ungc_db.query(st)
+
 def read_gps(fname):
     x = []
     with open(fname) as f:
@@ -31,6 +26,11 @@ def read_gps(fname):
         x.append(s[1:])
     f.closed
     return(x)
+    
+st = "SELECT name, date from active where sector like 'Chem%' limit 20;"
+#ungc_db.query(st)
+#print(ungc_db)
+
 
 #a = read_gps("./gps.txt")
 #print(a[0])

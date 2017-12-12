@@ -44,6 +44,8 @@ class db:
 		if not self.is_closed():
 			self.execute(exec_string)
 			self.query_results = self.cursor.fetchall()
+			obj = self.query_results[:]
+			return(obj)
 		
 	def close(self):
 		# May not be the best way to do this, but is_closed() should protect from error.
