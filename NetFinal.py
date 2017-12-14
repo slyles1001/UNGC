@@ -2,7 +2,29 @@
 import dbase as db
 #import pandas as pd
 import numpy as np
+import string
 
+def fix(stri, fu = 0):
+	'''stri to clean for db entry
+		db not so good with apostrophes
+		get rid of spaces and ., other punctuation too, preventatively
+		may cause complications for country ID but postgres doesn't case sensitive'''
+	# Python interprets 'None' as None for some reason;
+	# 'None' was listed as reason for delisting so script errored out.
+	def fux(st):
+		return st.replace(" ", "_")
+		
+	if stri is not None:
+		stri = stri.lower()
+		stri = "".join(l for l in stri if l not in string.punctuation)
+		if(fu):
+			stri = fux(stri)
+		if(stri[-1] == '\n'):
+		  stri = stri[:-1]
+		return(stri)
+	else:
+		return("none")
+		
 def connect():
   connect_str = "dbname='NetFinal' user='ducttapecreator' host='localhost' " #+ \
   			 # "password='OLIVIA'"
@@ -11,13 +33,13 @@ def connect():
   
   ungc_db = db.db(connect_str)
   def test_connection():
-    st = "SELECT count(name) from active where sector like 'Pharma%';"
+    st = "SELECT count(name) from ungc where sector like 'Pharma%';"
     v = ungc_db.query(st)
     print(v)
-    st = "SELECT count(name) from active where sector like 'Fore%';"
+    st = "SELECT count(name) from ungc where sector like 'Fore%';"
     w = ungc_db.query(st)
     print(w)
-    st = "SELECT count(name) from active where sector like 'Chem%';"
+    st = "SELECT count(name) from ungc where sector like 'Chem%';"
     x = ungc_db.query(st)
   
   return(ungc_db)
@@ -27,8 +49,7 @@ def read_gps(fname="./gps.txt"):
     with open(fname) as f:
         for line in f:
           s = line.split('\t')
-          #print(s[3][:-1])
-          x[s[3]] = (float(s[1]), float(s[2]))
+          x[fix(s[3])] = (float(s[1]), float(s[2]))
     f.closed
     return(x)
 
@@ -47,12 +68,17 @@ def file_creation(country_list, distance, emp_tally):
   def writecountries():
     ''' Writes a list of countries to file. Based on UNGC data, not gps.
     '''
-    sel = "select distinct(country) from active"
+    # only care about the countries that are active in that industry
+    # cuts the list down from 154 to 63
+    sel = """select distinct(country) from UNGC 
+              where global_compact_status = 'active'
+              and (sector ~* 'pharm' or sector ~* 'forest'
+              or sector ~* 'chem') """
     ungc_db = connect()
     sel = ungc_db.query(sel)
     with open('newcountries.txt', 'w') as nc:
-      for country in sel:
-        c2 = cleaned(country[0])
+      for country in sorted(sel):
+        c2 = country[0] + "\n" # cleaned(country[0])
         nc.write(c2)
       nc.closed
       
@@ -94,13 +120,55 @@ def file_creation(country_list, distance, emp_tally):
   if distance:
     write_dist('dmat.txt')
     
-  def get_info(country, sector):
+  def get_emp_count(country, sector):
     ''' input a country and a sector, returns the number of employees that sector has in that country
     '''
     ungc_db = connect()
-    sel = "select sum(country) from active"
-    sel = ungc_db.query(sel)
+    q = """select sum(employees) from UNGC 
+              where global_compact_status='active' and 
+              country ~* '%s' and
+              sector ~* '%s'
+      """ % (country, sector)
+    sel = ungc_db.query(q)[0][0]
+    if sel != None:
+      return(sel)
+    else:
+      return("NA")
+  
+  def test_emp_count():
+    sector = ("chem", "forestry", "pharma")
+    for s in sector:
+      x = (get_emp_count('france', s),)
+    print(x)
+  #test_emp_count()
+  
+  def string_print(l):
+    ''' takes a list of not strings and returns a list of strings'''
+    x = []
+    for i in l:
+      x.append(str(i))
+    return(x)
+  
+  def write_emp_count(emp_tally):
+    sector = ("chem", "forestry", "pharma")
+    b = read_countries()
+    d = {}
     
+    for country in b:
+      emp_count = ()
+      for sec in sector:
+        emp_count += (get_emp_count(country, sec), )
+      if emp_count != ('NA','NA','NA'):
+        d[country] = emp_count
+    if emp_tally:
+      with open("emp.txt", "w") as e:
+        for country in sorted(d.keys()):
+          e.write(country + "  " +
+          "  ".join(string_print(d[country])) + "\n")
+      e.closed
+    return(d)
+  
+  #write_emp_count(emp_tally)
   return(0)
   
 def haversine(a, b):
@@ -132,7 +200,10 @@ def fill_dist():
   for country in b:
     row = []
     for i in range(len(b)):
-      row.append(haversine(a[country], a[b[i]]))
+      try:
+        row.append(haversine(a[country], a[b[i]]))
+      except KeyError:
+        print(country, b[i])
     dx.append(row)
   return(dx)
 
@@ -142,10 +213,10 @@ def read_countries(fname = 'newcountries.txt'):
   x = []
   with open(fname) as nc:
       for line in nc:
-        x.append(line)
+        x.append(line[:-1])
   nc.closed
   return(x)
 #import gurobipy as gb
 
-#file_creation(False, False, True)  
+#file_creation(0,1, 0)  
 

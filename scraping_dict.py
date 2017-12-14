@@ -79,7 +79,22 @@ def add_ungc_table():
 	
 	database = db.db("dbname='NetFinal' user='ducttapecreator' host='localhost'")
 	
-	
+	def yes_no(answer):
+    yes = set(['yes','y', 'ye', 'Y', 'YES'])
+    no = set(['no','n', 'N', 'NO'])
+    
+    while True:
+        choice = raw_input(answer).lower()
+        if choice in yes:
+           return True
+        elif choice in no:
+           return False
+        else:
+           print "Please respond with 'yes' or 'no'\n"
+  dt = yes_no('Do you really want to start over? This thing runs for, like, an hour...')
+	if dt == False:
+	  print("That's what I thought.")
+	  return(0)
 	fields = ("name", "org_type", "sector", "country", "global_compact_status", "date_joined", "date_due", "employees", "ownership")
 	database.execute('''drop table if exists UNGC;''')
 	database.execute("CREATE TABLE UNGC (%s varchar(250), %s varchar(150), %s varchar(150), %s varchar(150), %s varchar(150), %s date, %s date, %s int, %s varchar(150));" % fields)
@@ -138,7 +153,7 @@ def add_ungc_table():
 		
 
 		# Save db
-	database.commit()
+	  database.commit()
 	database.close()
 
 def add_worldbank_table():

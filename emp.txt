@@ -1,0 +1,63 @@
+argentina  265  548  400
+australia  130  5240  NA
+austria  950  NA  250
+bahrain  474  500  NA
+bangladesh  NA  NA  7174
+belgium  32614  NA  NA
+bolivia  NA  NA  480
+brazil  23046  28445  6970
+bulgaria  540  NA  2500
+chile  1000  40000  360
+china  36138  18409  2444
+colombia  6835  1531  4007
+croatia  1015  NA  2200
+czechia  NA  NA  400
+denmark  6210  1627  51225
+ecuador  338  59  217
+egypt  55  NA  216
+finland  4453  56818  NA
+france  106936  124898  114473
+germany  351108  2214  50539
+ghana  NA  15  NA
+greece  NA  232  391
+india  11327  NA  230
+indonesia  NA  40093  NA
+iran islamic republic of  NA  NA  200
+ireland  NA  45000  NA
+israel  NA  NA  45000
+italy  810  5000  1045
+japan  207436  51148  98901
+jordan  NA  5500  NA
+kenya  105  133  190
+korea republic of  24586  NA  61
+latvia  NA  NA  1000
+lebanon  800  NA  NA
+luxembourg  140  NA  NA
+malaysia  NA  21  NA
+mexico  2319  8780  5175
+myanmar  1100  565  1006
+nepal  NA  NA  100
+netherlands  75998  42  80
+nigeria  192  NA  46
+norway  23075  3000  450
+pakistan  2730  1000  400
+paraguay  140  400  1000
+peru  NA  NA  200
+poland  188  366  1800
+qatar  1501  NA  NA
+saudi arabia  36450  NA  NA
+serbia  NA  NA  2323
+singapore  2625  5032  NA
+slovenia  190  NA  NA
+south africa  30368  39500  10000
+spain  4119  7042  5526
+sri lanka  200  NA  NA
+sweden  1550  7942  4955
+switzerland  82164  NA  116635
+thailand  9578  NA  NA
+turkey  1616  NA  3769
+uganda  NA  610  NA
+united arab emirates  65  NA  NA
+united kingdom  224  NA  159500
+united states of america  143225  NA  412405
+uruguay  NA  223  NA
