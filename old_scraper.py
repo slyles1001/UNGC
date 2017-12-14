@@ -11,7 +11,7 @@ http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
 #try:
 
 # db login info
-connect_str = "dbname='testpython' user='ducttapecreator' host='localhost' " #+ \
+connect_str = "dbname='NetFinal' user='ducttapecreator' host='localhost' " #+ \
 #			  "password='OLIVIA'"
 
 # use our connection values to establish a connection
@@ -41,32 +41,32 @@ def get_leave_date(url):
 	ldtext = sp.find('div',  {'class':'company-information-cop-due'})
 	othertext = sp.find('div', {'class':'company-information-overview'})
 	other_list = othertext.findAll('dd')
-# 		<div class='column company-information-overview'>
-#           <h2>Overview</h2>
-# 
-#           <dl>
-#               <dt>Country:</dt>
-#               <dd>United Arab Emirates</dd>
-# 
-#               <dt>Org. Type:</dt>
-#               <dd>SME</dd>
-# 
-#               <dt>Sector:</dt>
-#               <dd>Travel &amp; Leisure</dd>
-# 
-#             <dt>Global Compact Status:</dt>
-#             <dd>Delisted</dd>
-# 
-#               <dt>Reason for Delisting:</dt>
-#               <dd>Other reason related to the Integrity Measures</dd>
-# 
-#               <dt>Employees:</dt>
-#               <dd>20</dd>
-# 
-#               <dt>Ownership:</dt>
-#               <dd>Privately Held</dd>
-# 
-#           </dl>	
+  # 		<div class='column company-information-overview'>
+  #           <h2>Overview</h2>
+  # 
+  #           <dl>
+  #               <dt>Country:</dt>
+  #               <dd>United Arab Emirates</dd>
+  # 
+  #               <dt>Org. Type:</dt>
+  #               <dd>SME</dd>
+  # 
+  #               <dt>Sector:</dt>
+  #               <dd>Travel &amp; Leisure</dd>
+  # 
+  #             <dt>Global Compact Status:</dt>
+  #             <dd>Delisted</dd>
+  # 
+  #               <dt>Reason for Delisting:</dt>
+  #               <dd>Other reason related to the Integrity Measures</dd>
+  # 
+  #               <dt>Employees:</dt>
+  #               <dd>20</dd>
+  # 
+  #               <dt>Ownership:</dt>
+  #               <dd>Privately Held</dd>
+  # 
+  #           </dl>	
 	return(ldtext.time.string)
 
 def add_active():
@@ -199,7 +199,7 @@ def add_noncomm():
 		
 		conn.commit()		
 
-#add_active()
+add_active()
 
 #add_delisted()
 #cursor.execute("""SELECT delist_date from delisted""")

@@ -1,5 +1,5 @@
 #Seth Lyles
-#2016 June 22
+#2017 Dec 14
 
 from bs4 import BeautifulSoup
 import urllib3, certifi, psycopg2, string
@@ -27,15 +27,15 @@ def fix(stri, fu = 0):
 	else:
 		return("none")
 # comment comment	
-def data_getter(url):
+def data_getter(http, url):
 	''' Returns the page data from URL '''
 	ld = http.request("GET", url)
 	sp = BeautifulSoup(ld.data, "lxml")
 	return(sp)
 
-def scrape_data(url):
+def scrape_data(http, url):
 	''' Finds the date that the entity became delisted at URL '''
-	sp = data_getter(url)
+	sp = data_getter(http, url)
 	# Find all the relevant locations in web page source
 	#name, date joined, and date due/delisted are in different locations
 	nm = sp.find("header", {"class":"main-content-header"})
@@ -63,7 +63,7 @@ def scrape_data(url):
 	return(d)
 
 def add_ungc_table():
-	''' Adds the UNGC participants to a database, using a new table called 'active' '''
+	''' Adds the UNGC participants to a database, using a new table "UNGC" '''
 	# Open a pool manager object; create a socket requiring certificates
 	http = urllib3.PoolManager(cert_reqs="CERT_REQUIRED", ca_certs=certifi.where())
 
@@ -77,7 +77,7 @@ def add_ungc_table():
 	# Fill table with members of UNGC
 	# Can add fields to active, noncomm or delisted by looking at status
 	
-	database = db()
+	database = db.db("dbname='NetFinal' user='ducttapecreator' host='localhost'")
 	
 	
 	fields = ("name", "org_type", "sector", "country", "global_compact_status", "date_joined", "date_due", "employees", "ownership")
@@ -89,13 +89,13 @@ def add_ungc_table():
 	# Is there a way to know how many pages without going to site?
 	# Maybe do while loop, checking for 50 things? Probably not worth it, but could be more elegant
 	
-	for i in range(444): #444 as of 7 Aug 2016
+	for i in range(258): #444 as of 7 Aug 2016 # 258 as of 12/14/17
 	
 		# observe which page we're parsing
 		print(i)
 		
 		# get data from ith page
-		soup = data_getter(BASE_URL + str(i+1) + THE_REST)
+		soup = data_getter(http, BASE_URL + str(i+1) + THE_REST)
 		
 		# get name tags, for links are stored there
 		nf = soup.findAll("th", "name")
@@ -107,18 +107,24 @@ def add_ungc_table():
 		
 		for link in links:
 			data = ()
-			d = scrape_data(link)
+			d = scrape_data(http, link)
 			
 			# make new tuple of dictionary values
 			# Do we really need a dictionary here? should be able to use a list so we don't have to build anything...
 			for f in fields:
-				data += (d[f], )
+				try:
+				  data += (d[f], )
+				except KeyError: # some entities have missing data
+				  data += ('null', )
 			
 			#  ('name', 'org_type', 'sector', 'country', 'global_compact_status', 'date_joined', 'date_due', 'employees', 'ownership')
 			# postgres wasn't accepting the string unless it was done in 2 pieces, parentheses maybe?
 			cmd0 = "INSERT INTO UNGC (%s, %s, %s, %s, %s, %s, %s, %s, %s) " % fields
+			#try: # debugging for missing data
 			cmd1 = "VALUES (%r, %r, %r, %r, %r, %r, %r, %s, %r)" % data
 			cmd = cmd0 + cmd1	
+			#except TypeError:
+			#  print(data)
 			#cmd = cmd.replace('"', "'")	INSERT INTO UNGC SELECT '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}' WHERE not EXISTS (select name from UNGC where name = '{0}');", row
 			# Add to our db:
 			try:
@@ -132,8 +138,8 @@ def add_ungc_table():
 		
 
 		# Save db
-		database.commit()
-		database.close()
+	database.commit()
+	database.close()
 
 def add_worldbank_table():
 	
@@ -298,7 +304,7 @@ def count_by_years_table():
 #def get_category_links(section_url):
 
 
-ungc_db = db.db()
-st = "SELECT count(name), count(distinct sector), count(distinct org_type) from UNGC where date_joined < '%s' and date_due >= '%s' and country='%s' limit 20;" % (20100101, 20110101, 'brazil')
-ungc_db.query(st)
-
+#ungc_db = db.db()
+#st = "SELECT count(name), count(distinct sector), count(distinct org_type) from UNGC where date_joined < '%s' and date_due >= '%s' and country='%s' limit 20;" % (20100101, 20110101, 'brazil')
+#ungc_db.query(st)
+add_ungc_table()
