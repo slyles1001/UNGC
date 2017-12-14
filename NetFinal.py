@@ -10,7 +10,8 @@ def get_dmat(fname = "dmat.txt"):
   x = []
   with open(fname) as f:
     for line in f:
-      x.append(list(map(int, line)))
+      tmp = line[:-1].split(" ")
+      x.append(list(map(int, tmp)))
   f.closed
   return(x)
 
@@ -31,7 +32,8 @@ def get_emps(fname = "emp.txt"):
       # file reads in as:
       # country chemployees forestemploy  pharmploy
       # make dict with country as key, tuple of vals as val
-      d[x[0]] = (x[1], x[2], x[3])
+      tmp = (x[1], x[2], x[3])
+      d[x[0]] = list(map(int, tmp))
   f.closed
   return(d)
 
@@ -50,35 +52,42 @@ def test_split():
   for i in x:
     print(i)
 
-def guropt(var, l, h, k):
-    '''var = # nodes, l = graph matrix, 
+def ifelse(statement, t, f):
+  '''ifelse like in R, which i like so here it is.'''
+  if statement:
+    return(t)
+  else:
+    return(f)
+
+def guropt(var, d, h, k, countries):
+    '''var = # nodes, d = graph matrix, 
         h = node weight vec, k = number of facilities
     '''
     m = Model()
 
     y = {}
-    W = m.addVar(lb = 0, name='W')
+    #W = m.addVar(lb = 0, name='W')
     x = m.addVars(range(var), name='Facility', vtype=GRB.BINARY)
     for i in range(var):
         for j in range(var):
             y[(i,j)] = m.addVar(name='y(%s,%s)'%(i,j), lb = 0)
-
+    print(str(y[(0,1)]))
     m.update()
     m.modelSense=GRB.MINIMIZE
-    m.setObjective(quicksum(quicksum(quicksum(h[i]*l[i][j]*y[(i,j)] for j in range(var)) for i in range(var)))
+    m.setObjective(quicksum(quicksum(np.log(h[i] + 1)  * d[i][j] * y[(i, j)] for j in range(var)) for i in range(var)))
     m.update()
 
-    for i in range(var):
-        m.addConstr(quicksum(y[(i,j)] for j in range(var)) == 1)
+    m.addConstr(quicksum(x[j] for j in range(var)) == k)
+    m.addConstrs(quicksum(y[(i,j)] for j in range(var)) == 1 for i in range(var))
+    m.addConstrs(x[j] <= bool(h[j]) for j in range(var))
 
-    for i in range(var):
-        for j in range(var):
-            m.addConstr(y[(i,j)] <= x[(j)])
+    m.addConstrs(y[(i,j)] <= x[(j)] for j in range(var) for i in range(var))
+    
 
     m.update()
     m.optimize()
 
-    def printSolution(m):
+    def printSolution(m, countries):
         obj = 0
         outs = []
         xvals = []
@@ -88,14 +97,14 @@ def guropt(var, l, h, k):
             for i, v in enumerate(m.getVars()):
                 if v.VarName.split()[0][0] != 'y':
                     if v.x > 0.0001:
-                        print('%s %g' % (v.VarName, v.x))
+                        print('%s %d %g' % (countries[i], h[i], v.x))
                         outs.append(v.VarName)
                         xvals.append(v.x)
             return [obj, outs, xvals]
         else:
             print('No solution')
 
-    x = printSolution(m)
+    x = printSolution(m, countries)
     return(x)
   
 def main():
@@ -106,11 +115,15 @@ def main():
   emps = get_emps()
   var = len(countries)
   W = split_sectors()
-  for weight in W:
-    guropt(var, dmat, )
+  with open('output.txt', 'w') as outfile:
+    for i in range(3):
+      k = i+1
+      for weight in W:
+        outputs = guropt(var, dmat, weight, k, countries)
+        outfile.write("%g, " % outputs[0])
+  return(0)
   
-  
-  
+main()
   
   
   
