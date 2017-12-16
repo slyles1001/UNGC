@@ -16,14 +16,14 @@ def add_routes(c_facils, dmat, emps):
   sec_col = ['blue','green','red']
   secs = ['Chemicals', 'Forestry', 'Pharmaceuticals']
   cl = sorted(emps.keys())
-  def scatterfill(facility, c, s):
+  def scatterfill(facility, co, s):
     # i hated that this bit of code wouldn't collapse
     pt = go.Scattergeo( #add each route from 
-          lat = [d[place][0], d[c][0]],
-          lon = [d[place][1], d[c][1]],
+          lat = [d[facility][0], d[co][0]],
+          lon = [d[facility][1], d[co][1]],
           mode = 'lines',
           legendgroup = secs[s],
-          name = c,
+          name = co,
           showlegend=False, # don't want to see a legend for every country
           line = dict(
             width = .5,#len(str(emps[c][sector]))/2, scaling line looked bad
@@ -33,7 +33,7 @@ def add_routes(c_facils, dmat, emps):
     return(pt)
   for sector in range(3):
     for i, c in enumerate(cl): # c will be country names
-      if emps[c][sector] > 0: # if they have employees in given sector
+      if c not in c_facils[sector] and emps[c][sector] > 0: # if they have employees in given sector
         msf = 1000000
         place = c_facils[0] # selected location to travel to
         for country in c_facils[sector]: # pick the closest facility
@@ -44,7 +44,7 @@ def add_routes(c_facils, dmat, emps):
         x.append(scatterfill(place, c, sector))  
       
     for country in c_facils[sector]: # the host countries weren't on the map!
-      x.append(scatterfill(country, country, sector))
+      x.append(scatterfill(country, country, sector)) # and... need them second
     x.append(go.Scattergeo( # the sectors need to be on the graph for legend
           lat = [0,0],  # set these to be points so they don't get in the way
           lon = [0,0],
@@ -65,9 +65,9 @@ def plots(data, layout, p):
   #Data(traces_cc + data)
   fig = dict( data=data, layout=layout )
   if p < 3:
-    url = py.plot( fig, filename='d3-great-circle-%d' % p )
+    url = py.plot( fig, filename='Planar-location-%d' % p )
   else: # lazy fix for plotly renaming stuff...
-    url = py.plot( fig, filename='d3-great-sphere-%d' % (p-3) )
+    url = py.plot( fig, filename='sphere-location-%d' % (p-3) )
   return(url)
  
 def blah():  
