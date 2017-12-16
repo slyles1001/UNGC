@@ -58,7 +58,10 @@ def plots(data, layout, p):
   #traces_cc = get_coastline_traces()+get_country_traces()
   #Data(traces_cc + data)
   fig = dict( data=data, layout=layout )
-  url = py.plot( fig, filename='d3-great-circle-%d' % p )
+  if p < 3:
+    url = py.plot( fig, filename='d3-great-circle-%d' % p )
+  else: # lazy fix for plotly renaming stuff...
+    url = py.plot( fig, filename='d3-great-sphere-%d' % (p-3) )
   return(url)
  
 def blah():  

@@ -208,10 +208,12 @@ def plotit():
   x = [p1,p2,p3]
   for i in range(3):
     layout = make_layout(i)
+    sp_layout = sphere_layout(i)
     print(len(x[i][0]))
     data = add_routes(c_facils = x[i],  \
           dmat = get_dmat(), emps = get_emps())
     url = plots(data, layout, i)
+    url2 = plots(data, sp_layout, i+3)
   
 plotit()  
   
