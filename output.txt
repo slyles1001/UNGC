@@ -1,54 +1,63 @@
 Objective: 1739357.6606382532
  p: 1
  Sector: Chemicals
+ Runtime: 0.659386
 Activated nodes:
 austria 
 
 Objective: 1570501.261869714
  p: 1
  Sector: Forestry & Paper
+ Runtime: 0.611953
 Activated nodes:
 austria 
 
 Objective: 1495584.4536726708
  p: 1
  Sector: Pharmacy & Biotechnology
+ Runtime: 0.660610
 Activated nodes:
 austria 
 
 Objective: 1248151.415769632
  p: 2
  Sector: Chemicals
+ Runtime: 0.622422
 Activated nodes:
 myanmar switzerland 
 
 Objective: 1057910.996890059
  p: 2
  Sector: Forestry & Paper
+ Runtime: 0.601351
 Activated nodes:
 paraguay poland 
 
 Objective: 954984.0890561418
  p: 2
  Sector: Pharmacy & Biotechnology
+ Runtime: 0.617868
 Activated nodes:
 czechia peru 
 
 Objective: 831526.1542803614
  p: 3
  Sector: Chemicals
+ Runtime: 0.604123
 Activated nodes:
 austria ecuador myanmar 
 
 Objective: 663521.577368814
  p: 3
  Sector: Forestry & Paper
+ Runtime: 0.607753
 Activated nodes:
 germany paraguay thailand 
 
 Objective: 664736.3008517384
  p: 3
  Sector: Pharmacy & Biotechnology
+ Runtime: 0.583509
 Activated nodes:
 austria bangladesh peru 
 

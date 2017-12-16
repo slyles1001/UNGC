@@ -5,6 +5,7 @@
 import numpy as np
 from gurobipy import *
 from graphs import *
+import time
 
 def get_dmat(fname = "dmat.txt"):
   x = []
@@ -121,11 +122,13 @@ def main():
     for i in range(3):
       p = i+1
       for i, weight in enumerate(W):
+        t1 = time.clock()
         outputs = p_median(var, dmat, weight, p, countries)
+        t2 = time.clock()
         #outfile.write("obj = %g, " % outputs[0])
         #outfile.write(" %s," % len(outputs[1]))
-        outfile.write("Objective: %(g)s\n p: %(p)s\n Sector: %(s)s\n" % \
-            {'g':outputs[0], 'p': p, 's': sectors[i]})
+        outfile.write("Objective: %(g)s\n p: %(p)s\n Sector: %(s)s\n Runtime: %(r)f\n" % \
+            {'g':outputs[0], 'p': p, 's': sectors[i], 'r':(t2 - t1)})
         #outfile.write("%g, " % outputs[0])
         outfile.write("Activated nodes:\n")
         # # writes the indices of facility sites
@@ -146,10 +149,12 @@ def make_layout(p):
             showland = True,
             showlakes = True,
             showcountries = True,
+            showocean = True,
             countrywidth = 0.5,
-            landcolor = 'rgb(204, 204, 204)',
-            countrycolor = 'rgb(204, 204, 204)',
-            lakecolor = 'rgb(155, 155, 255)',
+            #countrycolor = 'rgb(255, 255, 255)',
+            landcolor = 'rgb(230, 145, 56)',
+            lakecolor = 'rgb(0, 255, 255)',
+            oceancolor = 'rgb(0, 255, 255)',
             projection = dict( type="Natural Earth" ),
             coastlinewidth = 1,
             lataxis = dict(
