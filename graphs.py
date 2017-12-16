@@ -55,7 +55,24 @@ def add_routes(c_facils, dmat, emps):
             width = .5,#len(str(emps[c][sector]))/2,
             color = sec_col[sector],
           ),
-        ))  
+        ))
+  # country_blobs = [ dict( #For next time, can make weighted funk
+  #       type = 'scattergeo',
+  #       #locationmode = 'USA-states',
+  #       lon = d['long'],
+  #       lat = df_airports['lat'],
+  #       hoverinfo = 'text',
+  #       text = df_airports['airport'],
+  #       mode = 'markers',
+  #       marker = dict( 
+  #           size=2, 
+  #           color='rgb(255, 0, 0)',
+  #           line = dict(
+  #               width=3,
+  #               color='rgba(68, 68, 68, 0)'
+  #           )
+  #       ))]
+        
   return(x)        
       
  
@@ -64,6 +81,7 @@ def plots(data, layout, p):
   #traces_cc = get_coastline_traces()+get_country_traces()
   #Data(traces_cc + data)
   fig = dict( data=data, layout=layout )
+  
   if p < 3:
     url = py.plot( fig, filename='Planar-location-%d' % p )
   else: # lazy fix for plotly renaming stuff...
