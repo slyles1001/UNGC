@@ -23,3 +23,15 @@ npharm = 46
 secs = c(nchem, nfor, npharm)
 
 scaled = mat/secs
+
+mat[1,1]/mat[1,2] # compare chem p1 to chem p2
+mat[1,1]/mat[1,3] # and so forth
+mat[2,1]/mat[2,2]
+mat[2,1]/mat[2,3]
+mat[3,1]/mat[3,2]
+mat[3,1]/mat[3,3]
+mat[1,2]/mat[1,3]
+mat[2,2]/mat[2,3]
+mat[3,2]/mat[3,3]
+
+
